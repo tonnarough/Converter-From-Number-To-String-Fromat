@@ -21,32 +21,43 @@ public enum MathLogicImpl implements MathLogic {
 
         StringBuilder stringBuilder = new StringBuilder();
         Number currentNumber = determiningPropertiesOfNumber(number);
-        int currentDegree = currentNumber.getNumberOfClasses();
-        int count = 0;
+        int currentDegree = currentNumber.getNumberOfDegree();
+        int numberOfDigits = currentNumber.getNumberOfDigits();
+        int numberOfDigitsInHighDegree = currentNumber.getNumberDigitsOfHighestOrder();
         List<Integer> digitsInOneDegree = new ArrayList<>();
 
-        for (int i = currentNumber.getNumberOfDigits() - 1; i >= 0; i--) {
+        for (int j = numberOfDigits - 1; j >= numberOfDigits - numberOfDigitsInHighDegree; j--) {
 
-            if (i == 0) {
+            digitsInOneDegree.add(currentNumber.getDigits().get(j));
 
-                count++;
-                digitsInOneDegree.add(currentNumber.getDigits().get(i));
+        }
+
+        stringBuilder.append(convertingNumbersToStringFormatByClasses(digitsInOneDegree, currentDegree));
+        stringBuilder.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
+        digitsInOneDegree.clear();
+
+        for (int i = numberOfDigits - 1 - numberOfDigitsInHighDegree; i > 0; i -= 3) {
+
+            int x = 0;
+
+            x += currentNumber.getDigits().get(i);
+            x += currentNumber.getDigits().get(i - 1);
+            x += currentNumber.getDigits().get(i - 2);
+
+            if(x == 0){
+
+                currentDegree--;
+                continue;
 
             }
 
-            if (count == currentNumber.getNumberDigitsOfHighestOrder() && count != 0
-                    && i == currentNumber.getNumberOfDigits() - 1 - currentNumber.getNumberDigitsOfHighestOrder()
-                    || count % 3 == 0 && count != 0) {
-
-                stringBuilder.append(convertingNumbersToStringFormatByClasses(digitsInOneDegree, currentDegree));
-                stringBuilder.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
-                digitsInOneDegree.clear();
-                count = 0;
-
-            }
-
-            count++;
             digitsInOneDegree.add(currentNumber.getDigits().get(i));
+            digitsInOneDegree.add(currentNumber.getDigits().get(i - 1));
+            digitsInOneDegree.add(currentNumber.getDigits().get(i - 2));
+
+            stringBuilder.append(convertingNumbersToStringFormatByClasses(digitsInOneDegree, currentDegree));
+            stringBuilder.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
+            digitsInOneDegree.clear();
 
         }
 
@@ -58,7 +69,7 @@ public enum MathLogicImpl implements MathLogic {
         StringBuilder stringBuilder = new StringBuilder();
         List<Integer> digitsAfterTransformation = transformationNumbersInOneDegree(digits);
 
-        if(digits.size() == digitsAfterTransformation.size()) {
+        if (digits.size() == digitsAfterTransformation.size()) {
 
             for (int i = digits.size(); i > 0; i--) {
 
@@ -101,7 +112,7 @@ public enum MathLogicImpl implements MathLogic {
             numbersAfterDefinition.add(numberInCurrentDegre);
             return numbersAfterDefinition;
 
-        } else if(numberInCurrentDegre >= 100 && numberInCurrentDegre % 100 > 10 && numberInCurrentDegre % 100 < 20){
+        } else if (numberInCurrentDegre >= 100 && numberInCurrentDegre % 100 > 10 && numberInCurrentDegre % 100 < 20) {
 
             numbersAfterDefinition.add(numberInCurrentDegre / 100);
             numbersAfterDefinition.add(numberInCurrentDegre % 100);
@@ -129,11 +140,11 @@ public enum MathLogicImpl implements MathLogic {
 
         if (currentNumber.getNumberOfDigits() % 3 == 0) {
 
-            currentNumber.setNumberOfClasses(currentNumber.getNumberOfDigits() / 3);
+            currentNumber.setNumberOfDegree(currentNumber.getNumberOfDigits() / 3);
 
         } else {
 
-            currentNumber.setNumberOfClasses((currentNumber.getNumberOfDigits() / 3) + 1);
+            currentNumber.setNumberOfDegree((currentNumber.getNumberOfDigits() / 3) + 1);
 
         }
         currentNumber.setNumberDigitsOfHighestOrder(currentNumber.getNumberOfDigits() % 3);
