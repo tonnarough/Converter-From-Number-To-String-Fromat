@@ -1,5 +1,7 @@
 package by.yatsevich.test.task.service;
 
+import by.yatsevich.test.task.service.Impl.FileParsingImpl;
+
 public interface FileParsing {
 
     String convertDigitToString(int digit, int digitPosition, int currentDegree);
