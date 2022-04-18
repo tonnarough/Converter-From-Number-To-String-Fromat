@@ -9,16 +9,12 @@ public class Number {
 
     private final BigInteger number;
     private int numberOfDigits;
-    private int numberOfClasses;
+    private int numberOfDegree;
     private int numberDigitsOfHighestOrder;
     private final List<Integer> digits = new ArrayList<>();
 
     public Number(BigInteger number) {
         this.number = number;
-    }
-
-    public BigInteger getNumber() {
-        return number;
     }
 
     public List<Integer> getDigits() {
@@ -37,12 +33,12 @@ public class Number {
         this.numberOfDigits = numberOfDigits;
     }
 
-    public int getNumberOfClasses() {
-        return numberOfClasses;
+    public int getNumberOfDegree() {
+        return numberOfDegree;
     }
 
-    public void setNumberOfClasses(int numberOfClasses) {
-        this.numberOfClasses = numberOfClasses;
+    public void setNumberOfDegree(int numberOfDegree) {
+        this.numberOfDegree = numberOfDegree;
     }
 
     public int getNumberDigitsOfHighestOrder() {
@@ -55,7 +51,7 @@ public class Number {
 
             this.numberDigitsOfHighestOrder = 3;
 
-        }else{
+        } else {
 
             this.numberDigitsOfHighestOrder = numberDigitsOfHighestOrder;
 
@@ -67,14 +63,14 @@ public class Number {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Number number1 = (Number) o;
-        return numberOfDigits == number1.numberOfDigits && numberOfClasses == number1.numberOfClasses
+        return numberOfDigits == number1.numberOfDigits && numberOfDegree == number1.numberOfDegree
                 && numberDigitsOfHighestOrder == number1.numberDigitsOfHighestOrder
                 && Objects.equals(number, number1.number) && Objects.equals(digits, number1.digits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, numberOfDigits, numberOfClasses, numberDigitsOfHighestOrder, digits);
+        return Objects.hash(number, numberOfDigits, numberOfDegree, numberDigitsOfHighestOrder, digits);
     }
 
     @Override
@@ -82,7 +78,7 @@ public class Number {
         return "Number{" +
                 "number=" + number +
                 ", numberOfDigits=" + numberOfDigits +
-                ", numberOfClasses=" + numberOfClasses +
+                ", numberOfDegree=" + numberOfDegree +
                 ", numberDigitsOfHighestOrder=" + numberDigitsOfHighestOrder +
                 ", digits=" + digits +
                 '}';
