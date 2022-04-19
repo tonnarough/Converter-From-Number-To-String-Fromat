@@ -14,6 +14,7 @@ public enum MathLogicImpl implements MathLogic {
 
     private static final String SPACE = " ";
     private static final String EMPTY_STRING = "";
+    private static final String MINUS = "минус";
     private static final String REGEX_REMOVING_UNNECESSARY_SPACE = "[\\s]{2,}";
 
     private final FileParsing fileParsing = FileParsing.getInstance();
@@ -21,10 +22,18 @@ public enum MathLogicImpl implements MathLogic {
     public String getNumberInString(BigInteger number) {
 
         StringBuilder stringFormatOfNumber = new StringBuilder();
-        Number currentNumber = determiningPropertiesOfNumber(number);
+        Number currentNumber = new Number(number);
+
+        if (!currentNumber.isPositive()){
+
+            stringFormatOfNumber.append(MINUS);
+
+        }
+
         int currentDegree = currentNumber.getNumberOfDegree();
         int numberOfDigits = currentNumber.getNumberOfDigits();
-        int numberOfDigitsInHighDegree = currentNumber.getNumberDigitsOfHighestOrder();
+        int numberOfDigitsInHighDegree = currentNumber.getNumberDigitsOfHighestDegree();
+
         List<Integer> digitsInOneDegree = new ArrayList<>();
 
         for (int j = numberOfDigits - 1; j >= numberOfDigits - numberOfDigitsInHighDegree; j--) {
@@ -65,16 +74,15 @@ public enum MathLogicImpl implements MathLogic {
         StringBuilder stringFormatOfNumberInOneDegree = new StringBuilder();
         List<Integer> digitsAfterTransformation = transformationNumbersInOneDegree(digits);
 
-
         if (digits.size() == digitsAfterTransformation.size()) {
 
             for (int i = digits.size(); i > 0; i--) {
 
-                    stringFormatOfNumberInOneDegree
-                            .append(SPACE)
-                            .append(fileParsing
-                                    .convertDigitToString(digits
-                                            .get(digits.size() - i), i, currenDegree));
+                stringFormatOfNumberInOneDegree
+                        .append(SPACE)
+                        .append(fileParsing
+                                .convertDigitToString(digits
+                                        .get(digits.size() - i), i, currenDegree));
 
             }
 
@@ -104,12 +112,15 @@ public enum MathLogicImpl implements MathLogic {
                 .map(Object::toString)
                 .collect(Collectors.joining(EMPTY_STRING)));
 
-        if (numberInCurrentDegre > 10 && numberInCurrentDegre < 20) {
+        boolean isDigitsMultipleOfTen = numberInCurrentDegre % 10 == 0;
+        boolean isDigitsBetweenTenTwenty = numberInCurrentDegre % 100 > 10 && numberInCurrentDegre % 100 < 20;
+
+        if (digits.size() == 2 && (isDigitsBetweenTenTwenty || isDigitsMultipleOfTen)){
 
             numbersAfterTransformation.add(numberInCurrentDegre);
             return numbersAfterTransformation;
 
-        } else if (numberInCurrentDegre >= 100 && numberInCurrentDegre % 100 > 10 && numberInCurrentDegre % 100 < 20) {
+        } else if (digits.size() == 3 && (isDigitsBetweenTenTwenty || isDigitsMultipleOfTen)) {
 
             numbersAfterTransformation.add(numberInCurrentDegre / 100);
             numbersAfterTransformation.add(numberInCurrentDegre % 100);
@@ -121,32 +132,6 @@ public enum MathLogicImpl implements MathLogic {
 
         }
 
-    }
-
-    private Number determiningPropertiesOfNumber(BigInteger number) {
-
-        Number currentNumber = new Number(number);
-        currentNumber.setNumberOfDigits(String.valueOf(number).length());
-
-        for (int i = 0; i < currentNumber.getNumberOfDigits(); i++) {
-
-            currentNumber.setDigits(number.remainder(BigInteger.TEN).intValue());
-            number = number.divide(BigInteger.TEN);
-
-        }
-
-        if (currentNumber.getNumberOfDigits() % 3 == 0) {
-
-            currentNumber.setNumberOfDegree(currentNumber.getNumberOfDigits() / 3);
-
-        } else {
-
-            currentNumber.setNumberOfDegree((currentNumber.getNumberOfDigits() / 3) + 1);
-
-        }
-        currentNumber.setNumberDigitsOfHighestOrder(currentNumber.getNumberOfDigits() % 3);
-
-        return currentNumber;
     }
 
 }
