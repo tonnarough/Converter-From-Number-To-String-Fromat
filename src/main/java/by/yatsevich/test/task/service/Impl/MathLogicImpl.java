@@ -19,7 +19,7 @@ public enum MathLogicImpl implements MathLogic {
 
     public StringBuilder getNumberInString(BigInteger number) {
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringFormatOfNumber = new StringBuilder();
         Number currentNumber = determiningPropertiesOfNumber(number);
         int currentDegree = currentNumber.getNumberOfDegree();
         int numberOfDigits = currentNumber.getNumberOfDigits();
@@ -32,52 +32,52 @@ public enum MathLogicImpl implements MathLogic {
 
         }
 
-        stringBuilder.append(convertingNumbersToStringFormatByClasses(digitsInOneDegree, currentDegree));
-        stringBuilder.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
+        stringFormatOfNumber.append(convertingNumbersToStringFormatByDegrees(digitsInOneDegree, currentDegree));
+        stringFormatOfNumber.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
         digitsInOneDegree.clear();
 
         for (int i = numberOfDigits - 1 - numberOfDigitsInHighDegree; i > 0; i -= 3) {
 
-            int x = 0;
+            for (int k = i; k >= i - 2; k--) {
+                digitsInOneDegree.add(currentNumber.getDigits().get(k));
+            }
 
-            x += currentNumber.getDigits().get(i);
-            x += currentNumber.getDigits().get(i - 1);
-            x += currentNumber.getDigits().get(i - 2);
-
-            if(x == 0){
+            if (digitsInOneDegree.stream().mapToInt(a -> a).sum() == 0) {
 
                 currentDegree--;
+                digitsInOneDegree.clear();
                 continue;
 
             }
 
-            digitsInOneDegree.add(currentNumber.getDigits().get(i));
-            digitsInOneDegree.add(currentNumber.getDigits().get(i - 1));
-            digitsInOneDegree.add(currentNumber.getDigits().get(i - 2));
-
-            stringBuilder.append(convertingNumbersToStringFormatByClasses(digitsInOneDegree, currentDegree));
-            stringBuilder.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
+            stringFormatOfNumber.append(convertingNumbersToStringFormatByDegrees(digitsInOneDegree, currentDegree));
+            stringFormatOfNumber.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
             digitsInOneDegree.clear();
 
         }
 
-        return stringBuilder;
+        return stringFormatOfNumber;
     }
 
-    private StringBuilder convertingNumbersToStringFormatByClasses(List<Integer> digits, int currenDegree) {
+    private StringBuilder convertingNumbersToStringFormatByDegrees(List<Integer> digits, int currenDegree) {
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringFormatOfNumberInOneDegree = new StringBuilder();
         List<Integer> digitsAfterTransformation = transformationNumbersInOneDegree(digits);
+
 
         if (digits.size() == digitsAfterTransformation.size()) {
 
             for (int i = digits.size(); i > 0; i--) {
 
-                stringBuilder
-                        .append(SPACE)
-                        .append(fileParsing
-                                .convertDigitToString(digits
-                                        .get(digits.size() - i), i, currenDegree));
+                if (digits.get(digits.size() - i) == 0){
+                    continue;
+                }
+
+                    stringFormatOfNumberInOneDegree
+                            .append(SPACE)
+                            .append(fileParsing
+                                    .convertDigitToString(digits
+                                            .get(digits.size() - i), i, currenDegree));
 
             }
 
@@ -85,7 +85,7 @@ public enum MathLogicImpl implements MathLogic {
 
             for (int i = digitsAfterTransformation.size(); i > 0; i--) {
 
-                stringBuilder
+                stringFormatOfNumberInOneDegree
                         .append(SPACE)
                         .append(fileParsing
                                 .convertDigitToString(digitsAfterTransformation
@@ -95,12 +95,12 @@ public enum MathLogicImpl implements MathLogic {
 
         }
 
-        return stringBuilder;
+        return stringFormatOfNumberInOneDegree;
     }
 
     private List<Integer> transformationNumbersInOneDegree(List<Integer> digits) {
 
-        List<Integer> numbersAfterDefinition = new ArrayList<>();
+        List<Integer> numbersAfterTransformation = new ArrayList<>();
 
         int numberInCurrentDegre = Integer.parseInt(digits
                 .stream()
@@ -109,14 +109,14 @@ public enum MathLogicImpl implements MathLogic {
 
         if (numberInCurrentDegre > 10 && numberInCurrentDegre < 20) {
 
-            numbersAfterDefinition.add(numberInCurrentDegre);
-            return numbersAfterDefinition;
+            numbersAfterTransformation.add(numberInCurrentDegre);
+            return numbersAfterTransformation;
 
         } else if (numberInCurrentDegre >= 100 && numberInCurrentDegre % 100 > 10 && numberInCurrentDegre % 100 < 20) {
 
-            numbersAfterDefinition.add(numberInCurrentDegre / 100);
-            numbersAfterDefinition.add(numberInCurrentDegre % 100);
-            return numbersAfterDefinition;
+            numbersAfterTransformation.add(numberInCurrentDegre / 100);
+            numbersAfterTransformation.add(numberInCurrentDegre % 100);
+            return numbersAfterTransformation;
 
         } else {
 
