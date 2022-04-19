@@ -14,10 +14,11 @@ public enum MathLogicImpl implements MathLogic {
 
     private static final String SPACE = " ";
     private static final String EMPTY_STRING = "";
+    private static final String REGEX_REMOVING_UNNECESSARY_SPACE = "[\\s]{2,}";
 
     private final FileParsing fileParsing = FileParsing.getInstance();
 
-    public StringBuilder getNumberInString(BigInteger number) {
+    public String getNumberInString(BigInteger number) {
 
         StringBuilder stringFormatOfNumber = new StringBuilder();
         Number currentNumber = determiningPropertiesOfNumber(number);
@@ -56,7 +57,7 @@ public enum MathLogicImpl implements MathLogic {
 
         }
 
-        return stringFormatOfNumber;
+        return stringFormatOfNumber.toString().replaceAll(REGEX_REMOVING_UNNECESSARY_SPACE, SPACE);
     }
 
     private StringBuilder convertingNumbersToStringFormatByDegrees(List<Integer> digits, int currenDegree) {
@@ -68,10 +69,6 @@ public enum MathLogicImpl implements MathLogic {
         if (digits.size() == digitsAfterTransformation.size()) {
 
             for (int i = digits.size(); i > 0; i--) {
-
-                if (digits.get(digits.size() - i) == 0){
-                    continue;
-                }
 
                     stringFormatOfNumberInOneDegree
                             .append(SPACE)

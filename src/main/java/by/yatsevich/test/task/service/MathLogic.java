@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 public interface MathLogic {
 
-    StringBuilder getNumberInString(BigInteger number);
+    String getNumberInString(BigInteger number);
 
     static MathLogic getInstance(){
         return MathLogicImpl.INSTANCE;
