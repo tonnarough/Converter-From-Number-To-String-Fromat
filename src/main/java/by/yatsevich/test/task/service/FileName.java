@@ -1,12 +1,14 @@
 package by.yatsevich.test.task.service;
 
+import java.io.File;
+
 public enum FileName {
 
-    UNITS("units"),
-    TENS("tens"),
-    HUNDREDS("hundreds"),
-    FROM_TEN_TO_TWENTY("fromTenToTwenty"),
-    POWERS_OF_NUMBER("powersOfNumber");
+    UNITS("numerals" + File.separator + "units"),
+    TENS("numerals" + File.separator + "tens"),
+    HUNDREDS("numerals" + File.separator + "hundreds"),
+    FROM_TEN_TO_TWENTY("numerals" + File.separator + "fromTenToTwenty"),
+    POWERS_OF_NUMBER("numerals" + File.separator + "degreesOfNumber");
 
     private final String fileName;
 
