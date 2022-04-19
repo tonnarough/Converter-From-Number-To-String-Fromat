@@ -75,13 +75,17 @@ public class Number {
 
     @Override
     public String toString() {
-        return "Number{" +
-                "number=" + number +
-                ", numberOfDigits=" + numberOfDigits +
-                ", numberOfDegree=" + numberOfDegree +
-                ", numberDigitsOfHighestOrder=" + numberDigitsOfHighestOrder +
-                ", digits=" + digits +
-                '}';
+        StringBuilder numberToString = new StringBuilder();
+
+        numberToString
+                .append("Number{")
+                .append("number=").append(number)
+                .append(", numberOfDigits=").append(numberOfDigits)
+                .append(", numberOfDegree=").append(numberOfDegree)
+                .append(", numberDigitsOfHighestOrder=").append(numberDigitsOfHighestOrder)
+                .append(", digits=").append(digits).append("}");
+
+        return numberToString.toString();
     }
 
 }
