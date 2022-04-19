@@ -15,6 +15,7 @@ public enum MathLogicImpl implements MathLogic {
     private static final String SPACE = " ";
     private static final String EMPTY_STRING = "";
     private static final String MINUS = "минус";
+    private static final String ZERO = "ноль";
     private static final String REGEX_REMOVING_UNNECESSARY_SPACE = "[\\s]{2,}";
 
     private final FileParsing fileParsing = FileParsing.getInstance();
@@ -24,17 +25,23 @@ public enum MathLogicImpl implements MathLogic {
         StringBuilder stringFormatOfNumber = new StringBuilder();
         Number currentNumber = new Number(number);
 
-        if (!currentNumber.isPositive()){
-
-            stringFormatOfNumber.append(MINUS);
-
-        }
-
         int currentDegree = currentNumber.getNumberOfDegree();
         int numberOfDigits = currentNumber.getNumberOfDigits();
         int numberOfDigitsInHighDegree = currentNumber.getNumberDigitsOfHighestDegree();
 
         List<Integer> digitsInOneDegree = new ArrayList<>();
+
+        if (number.intValue() == 0) {
+
+            return ZERO;
+
+        }
+
+        if (currentNumber.isNegative()) {
+
+            stringFormatOfNumber.append(MINUS);
+
+        }
 
         for (int j = numberOfDigits - 1; j >= numberOfDigits - numberOfDigitsInHighDegree; j--) {
 
@@ -66,7 +73,7 @@ public enum MathLogicImpl implements MathLogic {
 
         }
 
-        return stringFormatOfNumber.toString().replaceAll(REGEX_REMOVING_UNNECESSARY_SPACE, SPACE);
+        return stringFormatOfNumber.toString().replaceAll(REGEX_REMOVING_UNNECESSARY_SPACE, SPACE).trim();
     }
 
     private StringBuilder convertingNumbersToStringFormatByDegrees(List<Integer> digits, int currenDegree) {
@@ -112,26 +119,21 @@ public enum MathLogicImpl implements MathLogic {
                 .map(Object::toString)
                 .collect(Collectors.joining(EMPTY_STRING)));
 
-        boolean isDigitsMultipleOfTen = numberInCurrentDegre % 10 == 0;
         boolean isDigitsBetweenTenTwenty = numberInCurrentDegre % 100 > 10 && numberInCurrentDegre % 100 < 20;
 
-        if (digits.size() == 2 && (isDigitsBetweenTenTwenty || isDigitsMultipleOfTen)){
+        if (isDigitsBetweenTenTwenty) {
 
-            numbersAfterTransformation.add(numberInCurrentDegre);
-            return numbersAfterTransformation;
-
-        } else if (digits.size() == 3 && (isDigitsBetweenTenTwenty || isDigitsMultipleOfTen)) {
+            if (digits.size() == 2) {
+                numbersAfterTransformation.add(numberInCurrentDegre);
+                return numbersAfterTransformation;
+            }
 
             numbersAfterTransformation.add(numberInCurrentDegre / 100);
             numbersAfterTransformation.add(numberInCurrentDegre % 100);
             return numbersAfterTransformation;
 
-        } else {
-
-            return digits;
-
         }
-
+        return digits;
     }
 
 }
