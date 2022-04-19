@@ -22,7 +22,7 @@ public enum FileParsingImpl implements FileParsing {
 
         previousDigit = digit;
 
-        if(digitPosition == 1 && currentDegree == 2){
+        if((digit == 1 || digit == 2) && digitPosition == 1 && currentDegree == 2){
 
             return converter(digit, digitPosition).split(COMMA)[1];
 
