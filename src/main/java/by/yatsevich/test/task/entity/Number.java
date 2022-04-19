@@ -11,7 +11,7 @@ public class Number {
     private int numberOfDigits;
     private int numberOfDegree;
     private int numberDigitsOfHighestDegree;
-    private final boolean isPositive;
+    private final boolean isNegative;
     private final List<Integer> digits = new ArrayList<>();
 
     public Number(BigInteger number) {
@@ -19,12 +19,12 @@ public class Number {
         if (number.signum() < 0){
 
             this.number = number.negate();
-            isPositive = false;
+            isNegative = true;
 
         }else{
 
             this.number = number;
-            isPositive = true;
+            isNegative = false;
 
         }
 
@@ -35,8 +35,8 @@ public class Number {
 
     }
 
-    public boolean isPositive() {
-        return isPositive;
+    public boolean isNegative() {
+        return isNegative;
     }
 
     public List<Integer> getDigits() {
@@ -106,14 +106,14 @@ public class Number {
         Number number1 = (Number) o;
         return numberOfDigits == number1.numberOfDigits && numberOfDegree == number1.numberOfDegree
                 && numberDigitsOfHighestDegree == number1.numberDigitsOfHighestDegree
-                && isPositive == number1.isPositive && Objects.equals(number, number1.number)
+                && isNegative == number1.isNegative && Objects.equals(number, number1.number)
                 && Objects.equals(digits, number1.digits);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(number, numberOfDigits, numberOfDegree, numberDigitsOfHighestDegree,
-                isPositive, digits);
+                isNegative, digits);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class Number {
                 .append(", numberOfDigits=").append(numberOfDigits)
                 .append(", numberOfDegree=").append(numberOfDegree)
                 .append(", numberDigitsOfHighestDegree=").append(numberDigitsOfHighestDegree)
-                .append(", isPositive=").append(isPositive)
+                .append(", isNegative=").append(isNegative)
                 .append(", digits=").append(digits).append('}');
 
         return numberToString.toString();
