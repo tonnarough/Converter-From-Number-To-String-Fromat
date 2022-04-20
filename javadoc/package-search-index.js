@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"by.yatsevich.test.task.entity"},{"l":"by.yatsevich.test.task.main"},{"l":"by.yatsevich.test.task.service"},{"l":"by.yatsevich.test.task.service.Impl"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"by.yatsevich.test.task.entity"},{"l":"by.yatsevich.test.task.exception"},{"l":"by.yatsevich.test.task.main"},{"l":"by.yatsevich.test.task.service"},{"l":"by.yatsevich.test.task.service.Impl"}]
