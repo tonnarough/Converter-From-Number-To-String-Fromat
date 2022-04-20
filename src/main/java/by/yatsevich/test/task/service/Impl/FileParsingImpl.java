@@ -1,5 +1,6 @@
 package by.yatsevich.test.task.service.Impl;
 
+import by.yatsevich.test.task.exception.FileParsingException;
 import by.yatsevich.test.task.service.FileName;
 import by.yatsevich.test.task.service.FileParsing;
 
@@ -28,13 +29,15 @@ public enum FileParsingImpl implements FileParsing {
 
     /**
      * Choosing the necessary declination of the digit.
+     *
      * @param digit
      * @param digitPosition hundreds, tens or units.
      * @param currentDegree
      * @return digit in string format.
+     * @throws FileParsingException
      */
     @Override
-    public String convertDigitToString(int digit, int digitPosition, int currentDegree) {
+    public String convertDigitToString(int digit, int digitPosition, int currentDegree) throws FileParsingException {
 
         previousDigit = digit;
 
@@ -42,42 +45,40 @@ public enum FileParsingImpl implements FileParsing {
 
             return converter(digit, digitPosition).split(COMMA)[1];
 
-        } else {
-
-            return converter(digit, digitPosition).split(COMMA)[0];
-
         }
+
+        return converter(digit, digitPosition).split(COMMA)[0];
+
     }
 
     /**
      * Converter degree to string format.
+     *
      * @param digit
      * @param degreeOfNumber
      * @return degree in string format.
+     * @throws FileParsingException
      */
     @Override
-    public String convertDegreeOfNumberToString(int digit, int degreeOfNumber) {
+    public String convertDegreeOfNumberToString(int digit, int degreeOfNumber) throws FileParsingException {
 
         String[] degreesOfNumberInStringFormat = converter(digit, degreeOfNumber).split(COMMA);
 
-        if (degreesOfNumberInStringFormat.length == 1) {
+        if (degreesOfNumberInStringFormat.length == 1) return EMPTY_STRING;
 
-            return EMPTY_STRING;
+        return determineDeclinationDegreeOfNumber(previousDigit, degreesOfNumberInStringFormat);
 
-        } else {
-
-            return determineDeclinationDegreeOfNumber(previousDigit, degreesOfNumberInStringFormat);
-
-        }
     }
 
     /**
      * Search for the required string representation of a number or degree in the desired file.
+     *
      * @param digit
      * @param digitPosition
      * @return
+     * @throws FileParsingException if the needed file wasn't found.
      */
-    private String converter(int digit, int digitPosition) {
+    private String converter(int digit, int digitPosition) throws FileParsingException {
 
         String regExToDetectRightLine = String.format(REGEX_TO_DETECT_RIGHT_LINE, digit);
         String regExToHighlightNumeral = String.format(REGEX_TO_HIGHLIGHT_NUMERAL, digit);
@@ -100,7 +101,7 @@ public enum FileParsingImpl implements FileParsing {
             }
         } catch (FileNotFoundException e) {
 
-            e.printStackTrace();
+            throw new FileParsingException(e.getMessage());
 
         }
 
@@ -109,9 +110,10 @@ public enum FileParsingImpl implements FileParsing {
 
     /**
      * Determining the correct declension of the degree of a number.
+     *
      * @param digit
      * @param declinations a set of degrees with different declension,
-     * from which need to choose the correct one.
+     *                     from which need to choose the correct one.
      * @return correct declension of the degree.
      */
     private String determineDeclinationDegreeOfNumber(int digit, String[] declinations) {
@@ -133,7 +135,6 @@ public enum FileParsingImpl implements FileParsing {
     }
 
     /**
-     * 
      * @param digit
      * @param digitPosition hundreds, tens or units or degrees.
      * @return file with specific numerals.
