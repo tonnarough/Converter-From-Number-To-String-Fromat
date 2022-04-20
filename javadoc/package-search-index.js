@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"by.yatsevich.test.task.entity"},{"l":"by.yatsevich.test.task.main"},{"l":"by.yatsevich.test.task.service"},{"l":"by.yatsevich.test.task.service.Impl"}]
