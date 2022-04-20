@@ -1,6 +1,7 @@
 package by.yatsevich.test.task.service.Impl;
 
 import by.yatsevich.test.task.entity.Number;
+import by.yatsevich.test.task.exception.FileParsingException;
 import by.yatsevich.test.task.service.FileParsing;
 import by.yatsevich.test.task.service.MathLogic;
 
@@ -20,11 +21,13 @@ public enum MathLogicImpl implements MathLogic {
     INSTANCE;
 
     private static final String SPACE = " ";
-    private static final String INVALID_NUMBER = "Invalid number...";
+    private static final String INVALID_NUMBER = "Нет такого числа...";
     private static final String EMPTY_STRING = "";
     private static final String MINUS = "минус";
     private static final String ZERO = "ноль";
     private static final String REGEX_REMOVING_UNNECESSARY_SPACE = "[\\s]{2,}";
+    private static final String MESSAGE_IN_CASE_OF_EXCEPTION = "Файл %sне был найден.\n";
+    private static final String NUMBER = "Число: ";
 
     private final FileParsing fileParsing = FileParsing.getInstance();
 
@@ -55,33 +58,40 @@ public enum MathLogicImpl implements MathLogic {
 
         if (currentNumber.isNegative()) stringFormatOfNumber.append(MINUS);
 
-        for (int j = numberOfDigits - 1; j >= numberOfDigits - numberOfDigitsInHighDegree; j--) {
+        try {
 
-            digitsInOneDegree.add(currentNumber.getDigits().get(j));
+            for (int j = numberOfDigits - 1; j >= numberOfDigits - numberOfDigitsInHighDegree; j--) {
 
-        }
-
-        stringFormatOfNumber.append(convertingNumbersToStringFormatByDegrees(digitsInOneDegree, currentDegree));
-        stringFormatOfNumber.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
-        digitsInOneDegree.clear();
-
-        for (int i = numberOfDigits - 1 - numberOfDigitsInHighDegree; i > 0; i -= 3) {
-
-            for (int k = i; k >= i - 2; k--) {
-                digitsInOneDegree.add(currentNumber.getDigits().get(k));
-            }
-
-            if (digitsInOneDegree.stream().mapToInt(a -> a).sum() == 0) {
-
-                currentDegree--;
-                digitsInOneDegree.clear();
-                continue;
+                digitsInOneDegree.add(currentNumber.getDigits().get(j));
 
             }
 
             stringFormatOfNumber.append(convertingNumbersToStringFormatByDegrees(digitsInOneDegree, currentDegree));
             stringFormatOfNumber.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
             digitsInOneDegree.clear();
+
+            for (int i = numberOfDigits - 1 - numberOfDigitsInHighDegree; i > 0; i -= 3) {
+
+                for (int k = i; k >= i - 2; k--) {
+                    digitsInOneDegree.add(currentNumber.getDigits().get(k));
+                }
+
+                if (digitsInOneDegree.stream().mapToInt(a -> a).sum() == 0) {
+
+                    currentDegree--;
+                    digitsInOneDegree.clear();
+                    continue;
+
+                }
+
+                stringFormatOfNumber.append(convertingNumbersToStringFormatByDegrees(digitsInOneDegree, currentDegree));
+                stringFormatOfNumber.append(SPACE).append(fileParsing.convertDegreeOfNumberToString(currentDegree--, 0));
+                digitsInOneDegree.clear();
+
+            }
+        } catch (FileParsingException e) {
+
+            return String.format(MESSAGE_IN_CASE_OF_EXCEPTION, e.getMessage()) + NUMBER + number;
 
         }
 
@@ -94,9 +104,10 @@ public enum MathLogicImpl implements MathLogic {
      * @param digits       arrayList of digits in one degree.
      * @param currenDegree degree of digits in firs param.
      * @return representation of a arrayList of digits in string format.
+     * @throws FileParsingException
      * @see FileParsingImpl#convertDigitToString(int digit, int digitPosition, int currentDegree).
      */
-    private StringBuilder convertingNumbersToStringFormatByDegrees(List<Integer> digits, int currenDegree) {
+    private StringBuilder convertingNumbersToStringFormatByDegrees(List<Integer> digits, int currenDegree) throws FileParsingException {
 
         StringBuilder stringFormatOfNumberInOneDegree = new StringBuilder();
         List<Integer> digitsAfterTransformation = transformationNumbersInOneDegree(digits);
