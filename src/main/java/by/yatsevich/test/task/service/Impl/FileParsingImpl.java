@@ -8,6 +8,15 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+/**
+ * A singleton class using enum.
+ * Class contain methods for: converting digit to string,
+ * converting degree of number to string,
+ * converter for digit and degree to string,
+ * determining declination of number degree,
+ * file selection.
+ */
+
 public enum FileParsingImpl implements FileParsing {
     INSTANCE;
 
@@ -17,12 +26,19 @@ public enum FileParsingImpl implements FileParsing {
     private static final String COMMA = ",";
     private static int previousDigit;
 
+    /**
+     * Choosing the necessary declination of the digit.
+     * @param digit
+     * @param digitPosition hundreds, tens or units.
+     * @param currentDegree
+     * @return digit in string format.
+     */
     @Override
     public String convertDigitToString(int digit, int digitPosition, int currentDegree) {
 
         previousDigit = digit;
 
-        if((digit == 1 || digit == 2) && digitPosition == 1 && currentDegree == 2){
+        if ((digit == 1 || digit == 2) && digitPosition == 1 && currentDegree == 2) {
 
             return converter(digit, digitPosition).split(COMMA)[1];
 
@@ -33,6 +49,13 @@ public enum FileParsingImpl implements FileParsing {
         }
     }
 
+    /**
+     * Converter degree to string format.
+     * @param digit
+     * @param degreeOfNumber
+     * @return degree in string format.
+     */
+    @Override
     public String convertDegreeOfNumberToString(int digit, int degreeOfNumber) {
 
         String[] degreesOfNumberInStringFormat = converter(digit, degreeOfNumber).split(COMMA);
@@ -43,11 +66,17 @@ public enum FileParsingImpl implements FileParsing {
 
         } else {
 
-            return declinationDegreeOfNumber(previousDigit, degreesOfNumberInStringFormat);
+            return determineDeclinationDegreeOfNumber(previousDigit, degreesOfNumberInStringFormat);
 
         }
     }
 
+    /**
+     * Search for the required string representation of a number or degree in the desired file.
+     * @param digit
+     * @param digitPosition
+     * @return
+     */
     private String converter(int digit, int digitPosition) {
 
         String regExToDetectRightLine = String.format(REGEX_TO_DETECT_RIGHT_LINE, digit);
@@ -78,7 +107,14 @@ public enum FileParsingImpl implements FileParsing {
         return stringFormat;
     }
 
-    private String declinationDegreeOfNumber(int digit, String[] declinations) {
+    /**
+     * Determining the correct declension of the degree of a number.
+     * @param digit
+     * @param declinations a set of degrees with different declension,
+     * from which need to choose the correct one.
+     * @return correct declension of the degree.
+     */
+    private String determineDeclinationDegreeOfNumber(int digit, String[] declinations) {
 
         if (digit == 1) {
 
@@ -96,6 +132,12 @@ public enum FileParsingImpl implements FileParsing {
 
     }
 
+    /**
+     * 
+     * @param digit
+     * @param digitPosition hundreds, tens or units or degrees.
+     * @return file with specific numerals.
+     */
     private File fileSelection(int digit, int digitPosition) {
 
         switch (digitPosition) {
