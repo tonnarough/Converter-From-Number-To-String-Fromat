@@ -31,6 +31,7 @@ public enum MathLogicImpl implements MathLogic {
     /**
      * Method checked if number is valid, if equal to zero, if negative.
      * Then the number is divided by degrees.
+     *
      * @param number that we want to convert to string format.
      * @return representation of a number in string format.
      */
@@ -45,7 +46,10 @@ public enum MathLogicImpl implements MathLogic {
 
         List<Integer> digitsInOneDegree = new ArrayList<>();
 
-        if (currentNumber.getDigits().stream().mapToInt(a -> a).sum() == 0) return INVALID_NUMBER;
+        if (currentNumber.getDigits().stream().mapToInt(a -> a).sum() == 0
+                && currentNumber.getDigits().size() > 1) {
+            return INVALID_NUMBER;
+        }
 
         if (number.intValue() == 0) return ZERO;
 
@@ -86,10 +90,11 @@ public enum MathLogicImpl implements MathLogic {
 
     /**
      * Passing the number by digit to
-     * @see FileParsingImpl#convertDigitToString(int digit, int digitPosition, int currentDegree).
-     * @param digits arrayList of digits in one degree.
+     *
+     * @param digits       arrayList of digits in one degree.
      * @param currenDegree degree of digits in firs param.
      * @return representation of a arrayList of digits in string format.
+     * @see FileParsingImpl#convertDigitToString(int digit, int digitPosition, int currentDegree).
      */
     private StringBuilder convertingNumbersToStringFormatByDegrees(List<Integer> digits, int currenDegree) {
 
@@ -129,6 +134,7 @@ public enum MathLogicImpl implements MathLogic {
      * Checking a number for the presence of numbers from 10 to 20.
      * If yes, then an array is returned: a higher-degree digit and a number from 10 to 20.
      * Or just number from 10 to 20.
+     *
      * @param digits arrayList of digits in one degree.
      * @return converted array of digits.
      */
